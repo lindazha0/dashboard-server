@@ -4,17 +4,19 @@ import struct
 import paho.mqtt.publish as publish
 from IPython import embed
 
+
 MQTT_BROKER = "en1-pi.eecs.tufts.edu"
 
-TEAM = "eccentric-egret"
-NODE = "n1"
+# TEAM = "eccentric-egret"
+TEAM = "fire-nation"
+NODE = "n3"
 
 
 # Construct the payload
 timestamp = int(time.time())  # 8 bytes
 sensor_temp = int(23.125 * 1000)  # 4 bytes
 thermistor_temp = int(22.893 * 1000)  # 4 bytes
-battery = 88  # 1 byte
+battery = 90  # 1 byte
 userdata = b"Arbitrary team-specific data"
 userlen = len(userdata)  # 2 bytes
 

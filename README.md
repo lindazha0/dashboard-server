@@ -31,6 +31,6 @@ The projects contains the following useful files:
 ├── deploy      # Deployment script for the dashboard
 ├── static
 │   └── style.css
-├── templates
+└─── templates
     └── index.html
 ```

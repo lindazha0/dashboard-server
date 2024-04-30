@@ -53,7 +53,7 @@ def node(team, nodeid):
   page = "time, temp1, temp2, battery, data<br/>"
   for r in result:
     page += f"{r[0]}, {r[4]}, {r[5]}, {r[6]}, {r[7]}<br/>"
- 
+
   conn.close()
   return page
 
