@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash, make_response
 import time
-import sqlite3
+import sqlite3, json
 
 dbFile = 'data.db'
 
@@ -50,15 +50,20 @@ def node(team, nodeid):
   conn = sqlite3.connect(dbFile)
   c = conn.cursor()
   result = c.execute("SELECT * FROM messages WHERE team IS ? AND nodeid IS ? ORDER BY timestamp", (team, nodeid))
-  page = "time, temp1, temp2, battery, data<br/>"
+
+
+  # create a json object
+  jsondata = []
   for r in result:
-    page += f"{r[0]}, {r[4]}, {r[5]}, {r[6]}, {r[7]}<br/>"
+    # Convert data into a list of dictionaries
+    jsondata.append({'time': time2str(r[0]), 'temp1': r[4], 'temp2': r[5], 'battery': r[6], 'data': 'default_data'})
+  print(f"jsondata:\n\t{jsondata}")
 
   conn.close()
-  return page
+  return render_template('dashboard.html', data=json.dumps(jsondata), team=team, nodeid=nodeid)
 
 @app.route('/time')
-def time():
-  return time.localtime()
+def cur_time():
+  return time.strftime("%A, %m/%d %I:%M%p", time.localtime())
 
 

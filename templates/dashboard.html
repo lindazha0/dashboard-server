@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <h2>Team: {{ team }}<br/> Node: {{nodeid}}</h2>
+    <button onclick="window.location.href='/'">Back</button>
+
+    <canvas id="tempChart" width="800" height="350" aria-label="Hello temperature World">
+    </canvas>
+
+    <canvas id="batteryChart" width="800" height="350" aria-label="Hello battery World">
+    </canvas>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Time</th>
+            <th>Temp1 (°C)</th>
+            <th>Temp2 (°C)</th>
+            <th>Battery (%)</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+        <tbody id="data-table">
+        </tbody>
+    </table>
+
+    <script>
+        const data = JSON.parse('{{ data | safe }}');
+
+        // Populate data table
+        const dataTable = document.getElementById('data-table');
+        data.forEach(item => {
+            const row = `<tr>
+                <td>${item.time}</td>
+                <td>${item.temp1}</td>
+                <td>${item.temp2}</td>
+                <td>${item.battery}</td>
+                <td>${item.data}</td>
+            </tr>`;
+            dataTable.innerHTML += row;
+        });
+
+        // Chart.js for temperature visualization
+        const ctx = document.getElementById('tempChart').getContext('2d');
+        const tempChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(item => item.time),
+                datasets: [{
+                    label: 'Temp1',
+                    data: data.map(item => item.temp1),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                }, {
+                    label: 'Temp2',
+                    data: data.map(item => item.temp2),
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+            // battery visualization
+            const ctx2 = document.getElementById('batteryChart').getContext('2d');
+            const batteryChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.time),
+                    datasets: [{
+                        label: 'Battery',
+                        data: data.map(item => item.battery),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+        });
+    </script>
+</body>
+</html>
