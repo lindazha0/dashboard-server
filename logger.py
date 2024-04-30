@@ -26,8 +26,8 @@ def save_message(client, userdata, message):
   # Unpack the payload
   (timestamp, sensortemp, thermistortemp, battery) = struct.unpack_from("qiib", message.payload, 0)
   teamdata = message.payload[19:]
-  
-  #print(f"time: {timestamp}, temp: {sensortemp} therm: {thermistortemp}  batt: {battery}  data: {data}")
+
+  print(f"time: {timestamp}, temp: {sensortemp} therm: {thermistortemp}  batt: {battery}")
 
   conn = sqlite3.connect(DATABASE_FILE)
   c = conn.cursor()
@@ -48,6 +48,6 @@ if __name__ == "__main__":
 
   client.connect(MQTT_BROKER)
   print("Connected.")
-  
+
   client.loop_forever()
 
