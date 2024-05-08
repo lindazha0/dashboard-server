@@ -60,7 +60,14 @@ def node(team, nodeid):
   print(f"jsondata:\n\t{jsondata}")
 
   conn.close()
-  return render_template('dashboard.html', data=json.dumps(jsondata), team=team, nodeid=nodeid)
+  return render_template(
+    'dashboard.html',
+    data=json.dumps(jsondata),
+    team=team, nodeid=nodeid,
+    temp=jsondata[-1]['temp'],
+    battery=jsondata[-1]['battery'],
+    time=time2str(jsondata[-1]['time'])
+  )
 
 @app.route('/time')
 def cur_time():
