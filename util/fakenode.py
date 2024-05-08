@@ -13,8 +13,8 @@ NODE = "n3"
 
 
 # Construct the payload
-timestamp = int(time.time())  # 8 bytes
-sensor_temp = int(23.125 * 1000)  # 4 bytes
+timestamp = int(time.time())          # 8 bytes
+sensor_temp = int(23.125 * 1000)      # 4 bytes
 thermistor_temp = int(22.893 * 1000)  # 4 bytes
 battery = 90  # 1 byte
 userdata = b"Arbitrary team-specific data"
@@ -29,6 +29,7 @@ struct.pack_into("qiib", blob, 0, timestamp, sensor_temp, thermistor_temp, batte
 struct.pack_into("h", blob, 17, userlen)
 blob[19:] = userdata
 
-publish.single(f"nodes/{TEAM}/{NODE}", blob, hostname=MQTT_BROKER)
+# publish.single(f"nodes/{TEAM}/{NODE}", blob, hostname=MQTT_BROKER)
+publish.single(f"czhao07/hw5/new_test", 'test', hostname=MQTT_BROKER)
 
 

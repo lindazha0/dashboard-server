@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/static/dashboard.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@^3"></script>
+    <!-- Time axis: Include Luxon library and time adaptor -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@^2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@^1"></script>
 </head>
 
 <body>
@@ -59,8 +62,7 @@
             <thead>
                 <tr>
                     <th>Time</th>
-                    <th>Temp1 (°C)</th>
-                    <th>Temp2 (°C)</th>
+                    <th>Temp (°C)</th>
                     <th>Battery (%)</th>
                 </tr>
             </thead>
@@ -77,8 +79,7 @@
         data.forEach(item => {
             const row = `<tr>
                 <td>${item.time}</td>
-                <td>${item.temp1}</td>
-                <td>${item.temp2}</td>
+                <td>${item.temp}</td>
                 <td>${item.battery}</td>
             </tr>`;
             dataTable.innerHTML += row;
@@ -89,14 +90,14 @@
         const tempChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(item => item.time),
+                labels: data.map(item => item.time * 1000),
                 datasets: [{
-                    label: 'Temp1',
-                    data: data.map(item => item.temp1),
+                    label: 'Temp Read',
+                    data: data.map(item => item.temp),
                     borderColor: '#40739e',
                     backgroundColor: '#487eb0',
                 }, {
-                    label: 'Temp2',
+                    label: 'Therm',
                     data: data.map(item => item.temp2),
                     borderColor: '#e1b12c',
                     backgroundColor: '#fbc531',
@@ -117,6 +118,14 @@
                 },
                 scales: {
                     x: {
+                        type: 'time',
+                        time: {
+                                // unit: 'second',
+                                displayFormats: {
+                                    day: 'DD',
+                                },
+                                tooltipFormat: 'DD HH:mm:ss'
+                            },
                         title: {
                             display: true,
                             align: 'end',
@@ -132,29 +141,52 @@
         const batteryChart = new Chart(ctx2, {
             type: 'line',
             data: {
-                labels: data.map(item => item.time),
                 datasets: [{
-                    label: 'Battery',
-                    data: data.map(item => item.battery),
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    label: 'Battery Data',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    data: [
+                        {x: 1609459200 * 1000, y: 20}, // Convert epoch time to milliseconds
+                        {x: 1612137600 * 1000, y: 25},
+                        {x: 1614556800 * 1000, y: 10}
+                    ]
                 }]
             },
             options: {
-                responsive: false,
-                plugins: {
-                    title: {
-                        align: 'start',
-                        color: '#68548E',
-                        display: true,
-                        font: {
-                            size: 18
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'month',
+                            displayFormats: {
+                                month: 'DDD'
+                            }
                         },
-                        text: 'Battery'
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.parsed.y;
+                            }
+                        }
                     }
                 }
             }
         });
+
     </script>
 </body>
 

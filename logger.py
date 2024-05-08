@@ -5,6 +5,7 @@ import sqlite3
 import paho.mqtt.client as mqtt
 
 MQTT_BROKER = "en1-pi.eecs.tufts.edu"
+MQTT_TOPIC = "teamF/#"
 DATABASE_FILE = "data.db"
 
 def save_message(client, userdata, message):
@@ -35,11 +36,24 @@ def save_message(client, userdata, message):
   conn.commit()
   conn.close()
 
+def show_messages(client, userdata, message):
+  # Don't save retained messages since the timestamp would be meaningless
+  if message.retain:
+    return
+
+  # topicbits = message.topic.split('/')
+  # if len(topicbits) != 3:
+  #   print(f"Unexpected topic: {message.topic}")
+  #   return
+
+  # team = topicbits[1]
+  # nodeid = topicbits[2]
+  print(f"topic: {message.topic},\nmesssage: {message.payload}")
 
 def on_connect(client, userdata, flags, rc):
   # Subscribe to and record everything under nodes/
-  client.subscribe('nodes/#')
-  client.on_message = save_message
+  client.subscribe(MQTT_TOPIC)
+  client.on_message = show_messages
 
 
 if __name__ == "__main__":

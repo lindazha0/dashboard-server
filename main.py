@@ -56,7 +56,7 @@ def node(team, nodeid):
   jsondata = []
   for r in result:
     # Convert data into a list of dictionaries
-    jsondata.append({'time': r[0], 'temp1': r[4], 'temp2': r[5], 'battery': r[6], 'data': 'default_data'})
+    jsondata.append({'time': r[1], 'temp': r[4], 'temp2': r[5], 'battery': r[6]})
   print(f"jsondata:\n\t{jsondata}")
 
   conn.close()
