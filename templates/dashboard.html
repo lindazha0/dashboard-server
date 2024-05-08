@@ -97,7 +97,7 @@
                     borderColor: '#40739e',
                     backgroundColor: '#487eb0',
                 }, {
-                    label: 'Therm',
+                    label: 'Therm Read',
                     data: data.map(item => item.temp2),
                     borderColor: '#e1b12c',
                     backgroundColor: '#fbc531',
@@ -132,6 +132,12 @@
                             text: 'Time'
                         }
                     },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature Measurement(°C)'
+                        }
+                    }
                 }
             }
         });
@@ -145,42 +151,44 @@
                     label: 'Battery Data',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
-                    data: [
-                        {x: 1609459200 * 1000, y: 20}, // Convert epoch time to milliseconds
-                        {x: 1612137600 * 1000, y: 25},
-                        {x: 1614556800 * 1000, y: 10}
-                    ]
+                    data: data.map(item => ({
+                        x: item.time * 1000,
+                        y: item.battery
+                    })),
                 }]
             },
             options: {
+                plugins: {
+                    title: {
+                        align: 'start',
+                        color: '#68548E',
+                        display: true,
+                        font: {
+                            size: 18
+                        },
+                        text: 'Battery'
+                    }
+                },
                 scales: {
                     x: {
                         type: 'time',
                         time: {
-                            unit: 'month',
+                            // unit: 'month',
                             displayFormats: {
-                                month: 'DDD'
-                            }
-                        },
+                                month: 'MMM YYYY'
+                            },
+                            tooltipFormat: 'DD HH:mm:ss'
+                            },
                         title: {
                             display: true,
-                            text: 'Date'
+                            align: 'end',
+                            text: 'Time'
                         }
                     },
                     y: {
-                        beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Value'
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.dataset.label + ': ' + tooltipItem.parsed.y;
-                            }
+                            text: 'Percentage Value (%)'
                         }
                     }
                 }
